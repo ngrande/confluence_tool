@@ -1,3 +1,6 @@
+.who_is_ticketmanager.cfg
+example*
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
