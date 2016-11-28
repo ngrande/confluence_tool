@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
 
-from distutils.core import setup
+from setuptools import setup
 
-setup(name='who_is_ticketmanager',
+setup(name='ticketmanager',
       version='0.1',
       description='Shows the dates when you are ticketmanager and tells you \
                    if this day is today',
       author='ngrande',
-      packages=['bs4, aiohttp'],
-      )
+      packages=['ticketmanager'],
+      install_requires=['bs4', 'aiohttp'],
+      scripts=['who_is_ticketmanager'])

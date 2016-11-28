@@ -1,0 +1,21 @@
+#!/usr/bin/env python3
+
+import ticketmanager
+import argparse
+import asyncio
+
+
+if __name__ == '__main__':
+    """
+        This is a good training for the python 3.5 async programming.
+        Fetch the html data as fast as possible, process it and send response..
+        Problem: we only need one html response here and having nothing todo
+        before we have that...
+    """
+    parser = argparse.ArgumentParser()
+    parser.add_argument("name", help="Name of the Ticketmanager you want to \
+                        get information about", type=str)
+    args = parser.parse_args()
+
+    loop = asyncio.get_event_loop()
+    loop.run_until_complete(ticketmanager.check(loop, args.name))

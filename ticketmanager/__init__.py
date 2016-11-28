@@ -1,5 +1,3 @@
-#!/usr/bin/env python3
-
 import aiohttp
 import asyncio
 import async_timeout
@@ -8,7 +6,6 @@ import configparser
 import json
 import os
 import datetime
-import argparse
 
 from bs4 import BeautifulSoup
 
@@ -149,8 +146,11 @@ async def download_ticketmanager_site(session):
 
 
 def print_beautiful(ticketmanager):
-    for day in ticketmanager.tm_days:
-        print('| %s %02d %02d | X |' % (day.year, day.month, day.day))
+    today = datetime.date.today()
+    upcoming = [day for day in ticketmanager.tm_days if day > today]
+    print('Upcoming:')
+    for day in upcoming:
+        print('\t| %s %02d %02d | X |' % (day.year, day.month, day.day))
 
     print()
 
@@ -168,7 +168,7 @@ def print_status(ticketmanager):
         print("+----------------------------------+")
 
 
-async def main(loop, name):
+async def check(loop, name):
     async with aiohttp.ClientSession(loop=loop, ) as session:
 
         name = str(name).lower()
@@ -189,18 +189,3 @@ async def main(loop, name):
             tm = ticketmanagers_dict[name]
             print_beautiful(tm)
             print_status(tm)
-
-if __name__ == '__main__':
-    """
-    This is a good training for the python 3.5 async programming.
-    Fetch the html data as fast as possible, process it and send response....
-    Problem: we only need one html response here and having nothing todo
-    before we have that...
-    """
-    parser = argparse.ArgumentParser()
-    parser.add_argument("name", help="Name of the Ticketmanager you want to \
-                        get information about", type=str)
-    args = parser.parse_args()
-
-    loop = asyncio.get_event_loop()
-    loop.run_until_complete(main(loop, args.name))
