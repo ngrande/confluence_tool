@@ -4,6 +4,24 @@ import ticketmanager
 import argparse
 import asyncio
 
+async def main(loop, name, print_upcoming, print_next):
+    ticketmanager_result = await ticketmanager.request_ticketmanager(loop,
+                                                                     name)
+    print("\n\nTicketmanager Status:")
+    print("--------------------------\n")
+    if not ticketmanager_result:
+        print("No information found for %s" % name)
+        return
+
+    if print_upcoming:
+        ticketmanager.print_upcoming_table(ticketmanager_result)
+
+    if print_next:
+        ticketmanager.print_time_till_next(ticketmanager_result)
+
+    if not print_next or ticketmanager_result.is_today:
+        ticketmanager.print_status(ticketmanager_result)
+
 
 if __name__ == '__main__':
     """
@@ -15,7 +33,12 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument("name", help="Name of the Ticketmanager you want to \
                         get information about", type=str)
+    parser.add_argument("--upcoming", help="Prints a table of all upcoming \
+                        days", action="store_true")
+    parser.add_argument("--next", help="Prints the days left till your next \
+                        ticketmanager day", action="store_true")
     args = parser.parse_args()
 
     loop = asyncio.get_event_loop()
-    loop.run_until_complete(ticketmanager.check(loop, args.name))
+    loop.run_until_complete(main(loop, args.name, args.upcoming, args.next))
+    loop.close()
